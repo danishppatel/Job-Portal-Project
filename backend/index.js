@@ -308,7 +308,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
   app.post("/sign-up" ,async (req, res)=>{
     // console.log(req.body)
 
-    const {name ,email, password ,confirmPassword} = req.body;
+    const {name ,email, password ,confirmPassword, mode} = req.body;
 
     if(!name || !email || !password || !confirmPassword){
         res.status(400).json({error: "Fill all the Details"})
@@ -328,7 +328,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
           const salt =  await bcrypt.genSalt(8);
           const hashPassword = await bcrypt.hash(password,salt);
 
-          const finalUser = await users.insertOne({name:name, email:email, password:hashPassword ,tokens:[{token:""}]}); //stored in database
+          const finalUser = await users.insertOne({name:name, email:email, password:hashPassword, mode:mode , tokens:[{token:""}]}); //stored in database
           
           
           //find saved user in db
@@ -353,7 +353,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
   })
 
   app.post("/login" ,async (req, res)=>{
-      const {email, password} = req.body;
+      const {email, password, mode } = req.body;
 
       if(!email || !password){
         res.status(400).json({error: "Fill all the Detail"})
@@ -361,11 +361,16 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
 
       try {
         const userValid = await users.findOne({email : email});
-
+       
         if(userValid != null){
            const isMatch =  await bcrypt.compare(password, userValid.password);
 
-           if((userValid.email === email) && isMatch){
+           if((userValid.email === email) && isMatch ){
+             
+            if(userValid.mode !== mode){
+               return res.status(400).json({error: "Please select Appropriate mode"});
+             }
+
              //token genearate
              const token = jwt.sign({userID: userValid._id} , process.env.JWT_SECRET_KEY, {expiresIn : '1d'})
              userValid.tokens =userValid.tokens.concat({token :token});
