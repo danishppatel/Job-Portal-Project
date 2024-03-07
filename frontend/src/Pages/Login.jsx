@@ -19,14 +19,16 @@ function Login() {
   const auth = getAuth();
   const googleProvider = new GoogleAuthProvider();
   const navigate = useNavigate()
-
+ 
   const handleLogin= ()=>{
     signInWithPopup(auth, googleProvider)
     .then((result) => {
       const user = result.user;
+      // console.log(" user :  ", user.email)
 
       //  console.log(user.email,"user1-------user1");
       // localStorage.setItem('usertoken' ,res.token);
+      dispatch(addTodo({userEmail:user.email}))
 
        navigate(`/mode/${user.email}`);
     
@@ -95,6 +97,7 @@ function Login() {
         const res = await data.json();
 
         const resAcknowledge =  await res.acknowledged;
+        
         if(resAcknowledge==="success"){
           toast.success(res.message);
          

@@ -12,6 +12,7 @@ function SignUp() {
     email:"",
     password:"",
     confirmPassword :"",
+    mode:"jobseeker"
   });
 
   // console.log(inputValue);
@@ -31,7 +32,7 @@ function SignUp() {
   const addUserData = async (e)=>{
     e.preventDefault();
 
-    const {name , email ,password , confirmPassword} = inputValue;
+    const {name , email ,password , confirmPassword,mode} = inputValue;
 
     if(name === ""){
       toast.error('Please enter your name');
@@ -80,11 +81,19 @@ function SignUp() {
             name:"",
             email:"",
             password:"",
-            confirmPassword:""
+            confirmPassword:"",
+            mode:"jobseeker"
 
            })
            setTimeout(() => {
-            navigate(`/mode/${inputValue.email}`);
+            // navigate(`/mode/${inputValue.email}`);
+            if(mode === "jobseeker"){
+              localStorage.setItem("selectedMode", "jobseeker")
+              navigate(`/resumeUploader`)
+            }else if(mode === "employer"){
+              localStorage.setItem("selectedMode", "employer")
+              navigate(`/`)
+            }
           }, 3000);
         }
         else if(res.error){
@@ -142,7 +151,22 @@ function SignUp() {
                   placeholder="Your Confirm Password"
                 />
 
-                <div className="flex justify-start md:justify-start  sm:justify-normal  mt-2 mb-4 sm:mx-2 ">
+                <div className="flex flex-col mb-4">
+                  <div className='w-full'>
+                    <select
+                      className='w-full rounded border border-stroke px-[14px] py-3 text-base text-body-color outline-none focus:border-primary dark:border-dark-3 dark:bg-dark dark:text-dark-6'
+                      value={inputValue.mode}
+                      onChange={setValue}
+                      name='mode'
+                      id='mode'
+                    >
+                      <option value='jobseeker'> JobSeeker</option>
+                      <option value='employer'> Employer</option>
+                    </select>
+                   </div>  
+                </div>
+
+              <div className="flex justify-start md:justify-start  sm:justify-normal  mt-2 mb-4 sm:mx-2 ">
                   <div>
                     <input
                       type="checkbox"
