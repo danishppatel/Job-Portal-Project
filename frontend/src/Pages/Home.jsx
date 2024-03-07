@@ -8,6 +8,7 @@ import CardUsers from "../Components/CardUsers";
 import Applicants from "./Applicants";
 import { useSelector } from "react-redux";
 import { Await, useNavigate } from "react-router-dom";
+import Error from "./Error";
 
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -29,22 +30,25 @@ function Home() {
   
   const todos = useSelector((state)=>state.todos);
   
-  const selectedMode = localStorage.getItem("selectedMode");
-
+  
   let filteredJobs = []; //extract those which are not apllied by jobseeker
   let user = useSelector(state=>state.todos)
+  console.log("user :  ", user)
   let navigate = useNavigate();
   useEffect(()=>{
     if(user.userEmail ===''){
       navigate('/login');
     }
   },[])
+
+  const selectedMode = localStorage.getItem("selectedMode");
+  
   //Jobs- for jobseeker  
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        console.log("here email",todos.userEmail);
+        // console.log("here email",todos.userEmail);
         const appliedJobsRes = await fetch(`http://localhost:3000/applied-jobs/${todos.userEmail}`);
         const appliedJobsData = await appliedJobsRes.json();
 
@@ -136,7 +140,6 @@ function Home() {
         jobList.forEach((id)=> {
           if(id === x._id){
             f = true;
-          
           }
         })
         
@@ -220,8 +223,6 @@ function Home() {
   const applicantList = (jobSeekers) =>{
     let jobseekerList =  jobSeekers;
 
-    // console.log("jobseeker list ", jobseekerList.length)
-
     const { startIndex, endIndex } = calculatePageRange();
 
     jobseekerList = jobseekerList.slice(startIndex, endIndex);
@@ -234,6 +235,7 @@ function Home() {
 
   return (
     <div>
+
       {/* passed as props  */}
       <Banner query={query} handleInputChange={handleInputChange} />
 
@@ -246,7 +248,8 @@ function Home() {
 
         {/* -----------------------------------------------job card-------------------------------------------------------- */}
 
-        {selectedMode === "mode1" ? (
+
+        {selectedMode === "jobseeker" ? (
           <div className="col-span-3 bg-white p-4 rounded-sm">
             {isLoading ? (
               <p className="font-medium">Loading...</p>

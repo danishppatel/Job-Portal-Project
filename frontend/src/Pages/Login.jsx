@@ -25,7 +25,7 @@ function Login() {
     .then((result) => {
       const user = result.user;
 
-       console.log(user.email,"user1-------user1");
+      //  console.log(user.email,"user1-------user1");
       // localStorage.setItem('usertoken' ,res.token);
 
        navigate(`/mode/${user.email}`);
@@ -42,6 +42,7 @@ function Login() {
   const [inputValue , setInputValue] = useState({
     email:"",
     password:"",
+    mode:"jobseeker"
   });
   
   // console.log(inputValue);
@@ -57,6 +58,8 @@ function Login() {
       }
     })
   }
+
+  console.log("input value" , inputValue)
 
   const loginUser = async (e)=>{
     e.preventDefault();
@@ -103,13 +106,21 @@ function Login() {
             ...inputValue,
             email:"",
             password:"",
+            mode:"jobseeker"
            })
            
           dispatch(addTodo({userEmail:email}))  //dispatch
 
           setTimeout(() => {
           
-            navigate(`/mode/${email}`);
+            if(inputValue.mode === "jobseeker"){
+              localStorage.setItem("selectedMode", "jobseeker")
+              navigate(`/resumeUploader`)
+            }
+            else if(inputValue.mode === "employer"){
+              localStorage.setItem("selectedMode", "employer")
+              navigate(`/`)
+            }
           }, 1500);
 
         } 
@@ -172,22 +183,25 @@ function Login() {
                 />
               </div>
 
-              <div className="flex justify-between md:justify-between  sm:justify-normal md:ml-6 mx-6 mt-2 mb-4 sm:mx-2 ">
-                <div>
-                  <input
-                    className=""
-                    type="checkbox"
-                    id="checkboxField"
-                    value=""
-                    checked
-                  />
-                  <label className="form-checkbox h-6 w-6 " for="form1Example3">
-                    {" "}
-                    Remember me{" "}
-                  </label>
+              <div className="flex flex-col ml-4 mr-4">
+                <h4 className=" text-start text-lg mb-2 mt-2">Select the mode that you want?</h4>
+                <div className='w-full'>
+                  <select
+                    className='border sm:w-full rounded py-2 px-4  mb-6'
+                    value={inputValue.mode}
+                    onChange={setValue}
+                    name='mode'
+                    id='mode'
+                  >
+                    <option value='jobseeker'> JobSeeker</option>
+                    <option value='employer'> Employer</option>
+                  </select>
                 </div>
 
+                
               </div>
+
+             
 
               <div className="mx-4">
                 <button

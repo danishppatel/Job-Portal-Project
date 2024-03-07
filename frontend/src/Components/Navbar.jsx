@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
 import App from '../App';
 import {FaBarsStaggered, FaXmark} from 'react-icons/fa6';
 import { useSelector } from 'react-redux';
+import Error from '../Pages/Error';
 
 function Navbar () {
     const email = useParams();
@@ -21,7 +22,7 @@ function Navbar () {
 
     let navItems ;
     
-    if(mode === "mode1"){
+    if(mode === "jobseeker"){
         navItems = [
             {path: `/`, title:"All Jobs"},
             {path: `/applied-job`, title:"Applied Jobs"},
@@ -30,13 +31,15 @@ function Navbar () {
     
         ]
     }
-    else if(mode === "mode2"){
+    else if(mode === "employer"){
         navItems = [
             {path: `/`, title:"All JobSeeker"},
             {path: `/my-job`, title:"My Jobs"},
             {path: `/post-job`, title:"Post A Job"},
             {path: `/contact`, title:"Contact"},
         ]
+    }else{
+        return ( <Error/>)
     }
    
 
@@ -96,7 +99,7 @@ function Navbar () {
                  }
 
                  {/* sign-up and` Login button  for mobile */}
-                  <li className='text-primary py-1'> <Link to="/login">Log in</Link></li>
+                  <li className='text-primary py-1'> <Link to="/login">Log out</Link></li>
 
                 </ul>
             </div>

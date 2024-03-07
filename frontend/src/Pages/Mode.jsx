@@ -6,20 +6,18 @@ const Mode = () => {
 
   const [selectedMode, setSelectedMode] = useState("");
 
+  console.log("selected mode in mode :  ", selectedMode)
+
   const navigate = useNavigate();
 
   //console.log(selectedMode)
-  localStorage.setItem("selectedMode", selectedMode);
   
   useEffect(() => {
-    if(selectedMode === "mode2"){
-    // console.log(selectedMode)
-    // console.log("ramad  ",email)
-
+    if(selectedMode === "employer"){
+        localStorage.setItem("selectedMode", selectedMode);
         navigate(`/`);
-    }else if(selectedMode === "mode1"){
-    // console.log(selectedMode)
-
+    }else if(selectedMode === "jobseeker"){
+      localStorage.setItem("selectedMode", selectedMode);
       navigate(`/resumeUploader`)
     }
     // if()
@@ -31,13 +29,13 @@ const Mode = () => {
         <div className="flex flex-col sm:flex-row lg:justify-evenly items-center lg:flex-row lg:mt-24 lg:ml-44 ">
           <div
             className=" h-[400px] w-[400px] mb-10  lg:mb-0 mr-12"
-            onClick={() => setSelectedMode("mode1")}
+            onClick={() => setSelectedMode("jobseeker")}
           >
             <ModeCard imageUrl="/images/jobseeker1.png" altText="Job Seeker" />
           </div>
           <div
             className=" h-[400px] w-[400px] mr-12 "
-            onClick={() => setSelectedMode("mode2")}
+            onClick={() => setSelectedMode("employer")}
           >
             <ModeCard imageUrl="/images/employer.jpg" altText="Employer" />
           </div>
