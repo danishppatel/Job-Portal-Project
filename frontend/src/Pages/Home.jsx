@@ -250,6 +250,7 @@ function Home() {
 
 
         {selectedMode === "jobseeker" ? (
+          
           <div className="col-span-3 bg-white p-4 rounded-sm">
             {isLoading ? (
               <p className="font-medium">Loading...</p>
