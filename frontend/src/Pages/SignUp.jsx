@@ -74,7 +74,8 @@ function SignUp() {
         const responseStatus =  await res.status;
 
         if(responseStatus === "success" ){
-           
+          dispatch(addTodo({userEmail:email}));
+
            setInputValue({
             ...inputValue,
             name:"",
@@ -85,14 +86,8 @@ function SignUp() {
 
            })
            setTimeout(() => {
-            // navigate(`/mode/${inputValue.email}`);
-            if(mode === "jobseeker"){
-              localStorage.setItem("selectedMode", "jobseeker")
-              navigate(`/resumeUploader`)
-            }else if(mode === "employer"){
-              localStorage.setItem("selectedMode", "employer")
-              navigate(`/`)
-            }
+            navigate(`/send-mail`);
+            
           }, 3000);
         }
         else if(res.error){
