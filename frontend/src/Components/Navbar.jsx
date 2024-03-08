@@ -33,7 +33,7 @@ function Navbar () {
     }
     else if(mode === "employer"){
         navItems = [
-            {path: `/`, title:"All JobSeeker"},
+            {path: `/home-employer`, title:"All JobSeeker"},
             {path: `/my-job`, title:"My Jobs"},
             {path: `/post-job`, title:"Post A Job"},
             {path: `/contact`, title:"Contact"},

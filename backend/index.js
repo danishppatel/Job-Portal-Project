@@ -487,19 +487,20 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
   });
   app.get("/all-jobSeeker/email/:email", async (req, res) => {
     try {
-      let email = "danishpatel5113@gmail.com";
+      let email = req.params.email;
       const jobseeker = await application.find({companyMail:email}).toArray();
       let jobSeekerlist = [];
+    console.log(jobseeker);
       for (const element of jobseeker) {
         let j = await jobSeeker.find({ email: element.email });
         j = await j.toArray();
-        
+       
         jobSeekerlist.push(...j);
 
     }
   
       // console.log(list.length);
-   
+    console.log("hello",jobSeekerlist);
       res.send(jobSeekerlist);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -532,7 +533,15 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
     let {email} = req.params;
     const body = req.body;
    let a =  await jobSeeker.updateOne({email:email},{$set:body});
-   console.log(a);
+  
+   res.send("updated");
+  })
+  app.put("/jobSeekerupdate/id/:id",async(req,res)=>{
+    let {id} = req.params;
+    const body = req.body;
+  
+   let a =  await jobSeeker.updateOne({_id:new ObjectId(id)},{$set:body});
+   
    res.send("updated");
   })
   //----------------------------------------Application-----------------------------------------

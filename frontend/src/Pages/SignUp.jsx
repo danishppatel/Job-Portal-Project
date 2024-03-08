@@ -1,12 +1,13 @@
 import React, { useState  } from "react";
+import { useDispatch } from "react-redux";
 import {Link, NavLink, useNavigate} from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { addTodo } from "../todoSlicer";
 function SignUp() {
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [inputValue , setInputValue] = useState({
     name:"",
     email:"",
@@ -75,7 +76,7 @@ function SignUp() {
         if(responseStatus === "success" ){
           // Successfully done
            toast.success(res.message);
-           
+           dispatch(addTodo({userEmail:inputValue.email})) 
            setInputValue({
             ...inputValue,
             name:"",
@@ -92,7 +93,7 @@ function SignUp() {
               navigate(`/resumeUploader`)
             }else if(mode === "employer"){
               localStorage.setItem("selectedMode", "employer")
-              navigate(`/`)
+              navigate(`/home-employer`)
             }
           }, 3000);
         }

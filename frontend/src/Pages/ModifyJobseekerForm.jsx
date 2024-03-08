@@ -105,7 +105,7 @@ function ModifyJobseekerForm() {
 
     try {
         // Send the modified data to the server
-        fetch(`http://localhost:3000/jobSeekerupdate/${todos.userEmail}`, {
+        fetch(`http://localhost:3000/jobSeekerupdate/id/${id}`, {
         method: "PUT",
         mode: "cors",
         headers: {
