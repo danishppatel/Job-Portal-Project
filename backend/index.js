@@ -11,8 +11,10 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const cookieParser =  require('cookie-parser')
+const  nodemailer =  require('nodemailer');
 const jwt = require('jsonwebtoken');
 const passport  =require('passport');
+const { senderTokenFun } = require('./emailVerifier/senderToken.js');
 const OAuth2Strategy = require('passport-google-oauth2').Strategy;
 
 
@@ -303,7 +305,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
     res.send(result);
   })
 
-
+  var useremail = "",userpassword="",username="",usermode="";
   //------------------------------------for Users-----------------------------------------------
   app.post("/sign-up" ,async (req, res)=>{
     // console.log(req.body)
@@ -324,26 +326,20 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
         }else if(password !== confirmPassword){
           res.status(404).json({error: "Password and Confirm Password Not Match."})
         }else{
-          // hash the password
-          const salt =  await bcrypt.genSalt(8);
-          const hashPassword = await bcrypt.hash(password,salt);
-
-          const finalUser = await users.insertOne({name:name, email:email, password:hashPassword, mode:mode , tokens:[{token:""}]}); //stored in database
-          
-          
-          //find saved user in db
-          const saved_user = await users.findOne({email : email});
-           
-          
-          if (finalUser.insertedId) {
-              //Geneate JWT Token
-              const token = jwt.sign({userID: saved_user._id} , process.env.JWT_SECRET_KEY, {expiresIn : '1d'})
+             usermode = mode;
+             username =name;
+             useremail =  email;
+             userpassword = password;
+              // console.log("first token :  ", token)
+              let token = "token"
+              await senderTokenFun(email, token);
+ 
+              console.log("\n\n after sending email...")
+ 
             
              res.status(201).json({message: "Registration successful!", status: "success" ,token : token});
              
-          } else {
-             res.status(404).json({error: "Cannot insert User. Try again later", status: "failed" });
-          }
+         
         }
 
     } catch(err){
@@ -373,6 +369,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
 
              //token genearate
              const token = jwt.sign({userID: userValid._id} , process.env.JWT_SECRET_KEY, {expiresIn : '1d'})
+             
              userValid.tokens =userValid.tokens.concat({token :token});
              
              //append token
@@ -436,6 +433,38 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
   })
 
 
+  //verify token using mail
+  app.get('/verify/:token', async (req, res)=>{ 
+    const {token} = req.params; 
+      
+   
+    if(useremail && userpassword && username){
+      const salt =  await bcrypt.genSalt(8);
+      const hashPassword = await bcrypt.hash(userpassword,salt);
+
+      const finalUser = await users.insertOne({name:username, email:useremail, password:hashPassword, mode:usermode , tokens:[{token:""}]}); //stored in database
+      
+     
+       if(finalUser.insertedId){
+        res.redirect('http://localhost:5173/login');
+       }
+       else{
+        res.statusCode(500).json({error : "Data not inserted"})
+       }
+      
+      
+    }
+    else{
+      res.statusCode(500).json({error : "Check line no 465 in backend"})
+    }
+       
+      } 
+    ); 
+
+  
+  
+
+
   //resume parsing code
   app.get("/data",(req, res) => {
      res.send(b);
@@ -452,6 +481,10 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
 
     res.send('Received data successfully.');
   });
+
+
+
+
 
 
   //------------------------------------for Job Seeker-----------------------------------------------
