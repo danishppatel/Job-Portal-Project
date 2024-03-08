@@ -20,23 +20,29 @@ function ModifyJobseekerForm() {
     const [SelectedOption, setSelectedOption] = useState(null);
         let {id}= useParams();
         let todos = useSelector(state =>state.todos)
+        const  [Id,setId] = useState('') ;
     useEffect(() => {
     const fetchDataFromApi = async () => {
         try {
         const response = await fetch(`http://localhost:3000/jobSeeker/${todos.userEmail}`);
-        const data = await response.json();
+        let data = await response.json();
             
-        console.log(data);
-        setName(data[0].name);
-        setEmail(data[0].email);
-        setMobileNumber(data[0].mobileNumber);
-        setJobPost(data[0].jobPost);
-        setProfileImage(data[0].profileImage);
-        setEmploymentType(data[0].employmentType);
-        setExperience(data[0].experience);
-        setEducation(data[0].education);
-        setAchievement(data[0].achievement);
-        setProject(data[0].project);
+       
+        data = data[data.length-1];      
+        setId(data._id); 
+       
+        console.log(data);     
+        setSelectedOption(data.skills)                                    
+        setName(data.name);
+        setEmail(data.email);
+        setMobileNumber(data.mobileNumber);
+        setJobPost(data.jobPost);
+        setProfileImage(data.profileImage);
+        setEmploymentType(data.employmentType);
+        setExperience(data.experience);
+        setEducation(data.education);
+        setAchievement(data.achievement);
+        setProject(data.project);
         } catch (error) {
         console.error("Error fetching data from API:", error);
         }
@@ -104,17 +110,25 @@ function ModifyJobseekerForm() {
     
 
     try {
+        console.log(data,Id);
         // Send the modified data to the server
-        fetch(`http://localhost:3000/jobSeekerupdate/id/${id}`, {
+        fetch(`http://localhost:3000/jobSeekerupdate/id/${Id}`, {
         method: "PUT",
         mode: "cors",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        }).then(res=>{
+           
+            navigate('/')
+        }
+
+        ).catch(err=>{
+            
         })
       
-        navigate(`/`);
+       
         
     } catch (error) {
         console.error("Error submitting form data:", error);
@@ -227,8 +241,8 @@ function ModifyJobseekerForm() {
                     <label className="block mb-2 text-lg">Employment Type</label>
                     <select
                     name="employmentType"
-                    // value={fillupField.employmentType}
-                    // onChange={handleFillUp}
+                    value={employmentType}
+                     onChange={hanedleChange}
                     className="block w-full flex-1 border-1 bg-white py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
                     >
                     <option value="">Choose your Experience</option>
