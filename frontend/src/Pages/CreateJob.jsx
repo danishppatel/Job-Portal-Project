@@ -29,7 +29,6 @@ const CreateJob = () => {
           }
           let data = await response.json();
           
-          console.log("data is",data);
           reset({
             jobTitle: data.jobTitle,
             companyName: data.companyName,
@@ -45,11 +44,14 @@ const CreateJob = () => {
             postedBy: data.postedBy,
             websiteLink:data.websiteLink,
             vacancy:data.vacancy,
+            jobDescription:data.jobDescription,
+            CompanyDescription:data.CompanyDescription
+
 
           });
           const skillsArray = data.skills.map((skill) => ({ value: skill['value'], label: skill['label'] }));
           setSelectedOption( skillsArray)
-          console.log(skillsArray);
+         
          
         }
       } catch (error) {
@@ -62,8 +64,23 @@ const CreateJob = () => {
 
   const onSubmit =  (data) => {
     
+    const requiredFields = ["jobTitle", "companyName", "minPrice", "maxPrice", "salaryType", "jobLocation", "postingDate", "experienceLevel", "companyLogo", "employmentType",  "websiteLink", "vacancy", "jobDescription","CompanyDescription"];
+    
     //for posting a job
     if(id === undefined || Object.keys(id).length === 0){
+      
+      if (!selectedOption || selectedOption.length === 0) {
+        toast.error('Please select at least one skill.');
+        return;
+      }
+
+      for (const field of requiredFields) {
+        if (!data[field] || data[field].trim() === "") {
+          toast.error(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+          return;
+        }
+      }
+
     
       data.skills = selectedOption;
       data.postedBy = todos.userEmail;
@@ -87,11 +104,24 @@ const CreateJob = () => {
       }).
       catch(err=>console.log(err));
     }
+
     //for edit(update) jobs
     else{
       data._id = id['id'];
       data.skills = selectedOption;
       data.postedBy = todos.userEmail;
+
+      if (!selectedOption || selectedOption.length === 0) {
+        toast.error('Please select at least one skill.');
+        return;
+      }
+
+      for (const field of requiredFields) {
+        if (!data[field] || data[field].trim() === "") {
+          toast.error(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+          return;
+        }
+      }
     
       fetch('http://localhost:3000/update-job', {
         method: 'POST',
@@ -118,6 +148,8 @@ const CreateJob = () => {
       postedBy: '',
       websiteLink:'',
       vacancy:'',
+      jobDescription:'',
+      CompanyDescription:''
     });
     setSelectedOption(null)
   };
@@ -147,7 +179,8 @@ const CreateJob = () => {
                 placeholder="Ex: Web Developer"
                 {...register("jobTitle")}
                 className="block w-full flex-1 border-1 bg-white py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
-              />
+                
+             />
             </div>
             <div className="lg:w-1/2 w-full">
               <label className="block mb-2 text-lg">Company Name</label>
@@ -303,9 +336,7 @@ const CreateJob = () => {
               {...register("jobDescription")}
               rows={4}
               placeholder="Job Description"
-              defaultValue={
-                "is seeking a skilled Software Engineer to join our dynamic and innovative team. The ideal candidate should have a passion for software development, strong problem-solving abilities, and a collaborative mindset to contribute to our cutting-edge projects."
-              }
+             
             ></textarea>
           </div>
         
@@ -317,22 +348,10 @@ const CreateJob = () => {
               {...register("CompanyDescription")}
               rows={4}
               placeholder="Company Description"
-              defaultValue={
-                " The ideal candidate should have a passion for software development, strong problem-solving abilities, and a collaborative mindset to contribute to our cutting-edge projects."
-              }
+             
             ></textarea>
           </div>
 
-          {/* Last raw */}
-          {/* <div className="w-full ">
-            <label className="block mb-2 text-lg">Job PostDated By</label>
-            <input
-              type="email"
-              placeholder="your email"
-              {...register("postedBy")}
-              className="block w-full flex-1 border-1 bg-white py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
-            />
-          </div> */}
           <input
             type="submit"
             className="block mt-12 bg-blue text-white font-semibold px-8 py-2 rounded-sm cursor-pointer "

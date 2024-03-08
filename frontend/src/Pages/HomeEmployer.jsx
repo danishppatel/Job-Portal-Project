@@ -25,8 +25,10 @@ function HomeEmployer() {
   
   let filteredJobs = []; //extract those which are not apllied by jobseeker
   let user = useSelector(state=>state.todos)
-  console.log("user :  ", user)
+  // console.log("user :  ", user)
+  
   let navigate = useNavigate();
+  
   useEffect(()=>{
     if(user.userEmail ===''){
       navigate('/login');
@@ -78,14 +80,6 @@ function HomeEmployer() {
   };
 
   
-
-  //main function
- 
-
-
-
-  //----------------------------------------------------For Employer-----------------------------------------------------------
-
   const noOfJobseeker = jobSeekers.filter(
     (jobSeekerData) => jobSeekerData
     // .jobTitle.toLowerCase().indexOf(query.toLowerCase()) !== -1
