@@ -16,6 +16,7 @@ import JobSeekerForm from "../Pages/JobSeekerForm";
 import JobseekerInfo from "../Pages/JobseekerInfo";
 import AppliedJob from "../Pages/AppliedJob";
 import ModifyJobseekerForm from "../Pages/ModifyJobseekerForm";
+import HomeEmployer from "../Pages/HomeEmployer";
 import VerifyMessage from "../Pages/VerifyMessage";
 
 // function Layout(){
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
     children:[
       { path:"/", 
           element:<Home/>,
+        },
+        {
+          path:"/home-employer",
+          element:<HomeEmployer/>
         },
         { 
           path:"/post-job",  

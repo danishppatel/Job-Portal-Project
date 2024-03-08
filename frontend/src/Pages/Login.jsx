@@ -122,7 +122,7 @@ function Login() {
             }
             else if(inputValue.mode === "employer"){
               localStorage.setItem("selectedMode", "employer")
-              navigate(`/`)
+              navigate(`/home-employer`)
             }
           }, 1500);
 

@@ -1,12 +1,13 @@
 import React, { useState  } from "react";
+import { useDispatch } from "react-redux";
 import {Link, NavLink, useNavigate} from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { addTodo } from "../todoSlicer";
 function SignUp() {
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [inputValue , setInputValue] = useState({
     name:"",
     email:"",
@@ -84,8 +85,14 @@ function SignUp() {
 
            })
            setTimeout(() => {
-            navigate(`/send-mail`);
-         
+            // navigate(`/mode/${inputValue.email}`);
+            if(mode === "jobseeker"){
+              localStorage.setItem("selectedMode", "jobseeker")
+              navigate(`/resumeUploader`)
+            }else if(mode === "employer"){
+              localStorage.setItem("selectedMode", "employer")
+              navigate(`/`)
+            }
           }, 3000);
         }
         else if(res.error){

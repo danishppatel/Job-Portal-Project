@@ -13,11 +13,9 @@ import Error from "./Error";
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [jobs, setJobs] = useState([]); //  as json array object
-  const [jobSeekers, setJobSeekers] =  useState([]); // as json array object
   const [isLoading, setIsLoading] = useState(true);
   const [jobList,setJobList] = useState([])
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentPageForApplicant, setCurrentPageForApplicant] = useState(1);
   let filterData = {
     location:"all",
     salary:'all',
@@ -66,21 +64,6 @@ function Home() {
 
     fetchData();
   }, []);
-
-
-  // JobSeekers - for Employer
-  useEffect(() => {
-    setIsLoading(true);
-    fetch(`http://localhost:3000/all-jobSeeker/email/${todos.userEmail}`)
-      .then((res) => res.json())
-      .then((data) => {
-
-        setJobSeekers(data);
-        setIsLoading(false);
-      });
-  }, []);
-
-  //------------------------------------------------For jobseekers--------------------------------------------
 
   // For Banner Components
   const [query, setQuery] = useState("");
@@ -189,50 +172,6 @@ function Home() {
   // result
   const result = filteredData(jobs, selectedCategory, query);  //call
 
-
-  //----------------------------------------------------For Employer-----------------------------------------------------------
-
-  const noOfJobseeker = jobSeekers.filter(
-    (jobSeekerData) => jobSeekerData
-    // .jobTitle.toLowerCase().indexOf(query.toLowerCase()) !== -1
-  );
-
-
-  const calculatePageRangeForEmployer = () => {
-    const startIndex = (currentPageForApplicant - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    return { startIndex, endIndex };
-  };
-
-  //function for the next phase
-  const nextPageForEmployer = () => {
-    if (currentPageForApplicant < Math.ceil(jobSeekers.length / itemsPerPage)) {
-      setCurrentPageForApplicant(currentPageForApplicant + 1);
-    }
-  };
-
-  //function for the previous phase
-  const previousPageForEmployer = () => {
-    if (currentPageForApplicant > 1) {
-      setCurrentPageForApplicant(currentPageForApplicant - 1);
-    }
-  };
-
-  //Applicant Details
-  const applicantList = (jobSeekers) =>{
-    let jobseekerList =  jobSeekers;
-
-    const { startIndex, endIndex } = calculatePageRange();
-
-    jobseekerList = jobseekerList.slice(startIndex, endIndex);
-
-    return jobseekerList.map((data, i) => <CardUsers key={i} data={data} />);
-  }
-
-  const jobseeker = applicantList(jobSeekers); //call , gives me list of job.seekers application for particular company, now it gives all the jobseekers application, changes it
-
-
   return (
     <div>
 
@@ -249,8 +188,6 @@ function Home() {
         {/* -----------------------------------------------job card-------------------------------------------------------- */}
 
 
-        {selectedMode === "jobseeker" ? (
-          
           <div className="col-span-3 bg-white p-4 rounded-sm">
             {isLoading ? (
               <p className="font-medium">Loading...</p>
@@ -294,52 +231,7 @@ function Home() {
               ""
               )}
           </div>
-        ) : (
-          /* -----------------------------------------------job-seeker card-------------------------------------------------------- */
-          <div className="col-span-3 bg-white p-4 rounded-sm">
-            {isLoading ? (
-              <p className="font-medium">Loading...</p>
-            ) : jobseeker.length > 0 ? (
-              <Applicants result={jobseeker} />
-            ) : (
-              <>
-                <h3 className="text-lg font-bold mb-2">
-                  {jobseeker.length} Applicant List
-                </h3>
-                <p>No data found!</p>
-              </>
-            )}
-
-            {/* pagination here */}
-            {result.length > 0 ? (
-              <div className="flex justify-center mt-4 space-x-8">
-                <button
-                  onClick={previousPage}
-                  className="hover:underline"
-                  disabled={currentPageForApplicant === 1}
-                >
-                  Previous
-                </button>
-                <span className="mx-2">
-                  Page {currentPageForApplicant} of{" "}
-                  {Math.ceil(noOfJobseeker.length / itemsPerPage)}{" "}
-                </span>
-                <button
-                  onClick={nextPage}
-                  className="hover:underline"
-                  disabled={
-                    currentPageForApplicant ===
-                    Math.ceil(noOfJobseeker.length / itemsPerPage)
-                  }
-                >
-                  Next
-                </button>
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-        )}
+         
 
       </div>
     </div>
