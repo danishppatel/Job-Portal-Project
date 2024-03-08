@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import CreatableSelect from "react-select/creatable";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function ModifyJobseekerForm() {
     const navigate = useNavigate();
@@ -110,8 +113,23 @@ function ModifyJobseekerForm() {
     
 
     try {
-        console.log(data,Id);
-        // Send the modified data to the server
+
+        const requiredFields = ["name", "email", "mobileNumber", "jobPost", "profileImage", "employmentType", "experience", "education", "achievement",  "project"];
+
+        if (!data.skills || data.skills.length === 0) {
+            console.log(data.skills,"data skills")
+            toast.error('Please select at least one skill.');
+            return;
+          }
+
+        for (const field of requiredFields) {
+            if (!data[field] || data[field].trim() === "") {
+                toast.error(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+                return;
+            }
+        }
+    
+         // Send the modified data to the server
         fetch(`http://localhost:3000/jobSeekerupdate/id/${Id}`, {
         method: "PUT",
         mode: "cors",
@@ -322,6 +340,7 @@ function ModifyJobseekerForm() {
         <button    className="block mt-12 bg-blue text-white font-semibold  mx-4 px-8 py-2 rounded-sm cursor-pointer" onClick={onSubmit}>Submit</button>
         
         </div>
+        <ToastContainer/>
     </div>
     );
 }
