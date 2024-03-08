@@ -16,6 +16,7 @@ import JobSeekerForm from "../Pages/JobSeekerForm";
 import JobseekerInfo from "../Pages/JobseekerInfo";
 import AppliedJob from "../Pages/AppliedJob";
 import ModifyJobseekerForm from "../Pages/ModifyJobseekerForm";
+import VerifyMessage from "../Pages/VerifyMessage";
 
 // function Layout(){
 //   const user = true;
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
   {
       path:"/sign-up",  
       element:<SignUp/>
+  },
+  {
+    path:"send-mail",
+    element:<VerifyMessage/>
   },
   {
       path:"/resumeUploader",

@@ -73,8 +73,6 @@ function SignUp() {
         const responseStatus =  await res.status;
 
         if(responseStatus === "success" ){
-          // Successfully done
-           toast.success(res.message);
            
            setInputValue({
             ...inputValue,
@@ -86,21 +84,15 @@ function SignUp() {
 
            })
            setTimeout(() => {
-            // navigate(`/mode/${inputValue.email}`);
-            if(mode === "jobseeker"){
-              localStorage.setItem("selectedMode", "jobseeker")
-              navigate(`/resumeUploader`)
-            }else if(mode === "employer"){
-              localStorage.setItem("selectedMode", "employer")
-              navigate(`/`)
-            }
+            navigate(`/send-mail`);
+         
           }, 3000);
         }
         else if(res.error){
           toast.error(res.error);
         }
 
-        console.log(res)
+        // console.log(res)
     }
   }
 
