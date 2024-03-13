@@ -85,6 +85,9 @@ function SignUp() {
             mode:"jobseeker"
 
            })
+
+          localStorage.setItem("userrole", inputValue.mode)
+
            setTimeout(() => {
             navigate(`/send-mail`);
             

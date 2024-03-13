@@ -21,6 +21,8 @@ function CardUsers({data}) {
           </div>
           <h2>{jobPost}</h2>
           <h2 className='flex items-end'> {date}</h2>
+          {/* replace with dynamic data */}
+          <h2 className='flex items-end'> Processing</h2>
           
         </div>
       </div>

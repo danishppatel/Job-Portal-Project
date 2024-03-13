@@ -3,9 +3,7 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 const AppliedJob = ()=>{
-    // const e = useParams();
     
-
     const[jobs,setjobs] = useState([])
     const [searchText,setSearchText] = useState("")
     const [isLoading,setIsLoading]=useState(true);
@@ -55,7 +53,7 @@ const AppliedJob = ()=>{
 
 
     const  handleSearch =()=>{
-        const filter = jobs.filter(  (job) => 
+        const filter = jobs.filter((job) => 
                       job.jobTitle.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 );
 
         // console.log(filter);
@@ -122,6 +120,10 @@ const AppliedJob = ()=>{
                                         SALARY
                                       </th>
                         
+                        <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                       STATUS
+                                      </th>
+                                      
                         <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"  >
                                         DELETE
                                       </th>
@@ -147,6 +149,9 @@ const AppliedJob = ()=>{
                                       </td>
                                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                           ${job.minPrice}-${job.maxPrice}
+                                      </td>
+                                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                        Processing
                                       </td>
                                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                         <button onClick={()=>{

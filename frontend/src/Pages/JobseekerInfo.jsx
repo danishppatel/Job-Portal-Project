@@ -14,12 +14,12 @@ function JobseekerInfo() {
       },[])
 
   return (
-    <section className="relative z-10 overflow-hidden bg-[#FAFAFA] py-10 dark:bg-dark lg:py-[50px]">
-
+    <section className="relative z-10 overflow-hidden bg-[#FAFAFA] py-8 dark:bg-dark lg:py-[50px]">
+     <h2 className=" text-3xl mt-2 mb-3 text-center text-gray-500 font-bold tracking-wide underline decoration-2 decoration-gray-400 underline-offset-2"> Job Seeker Details</h2>
     <div className='container'>
         <div className="flex flex-col lg:flex-row">
             {/* border-2 border-solid border-black */}
-            <div className="w-full lg:w-1/2 lg:ml-28 md:ml-5 mb-8 lg:mb-0 bg-white ">
+            <div className="w-full lg:w-1/2 lg:ml-28 md:ml-5 mb-8 lg:mb-0 bg-white  shadow-md rounded-md">
                 <div classnName=" lg:ml-12">
                     {/* <!-- job single --> */}
                     <div classnNameName="single-job-items mb-50">
@@ -67,7 +67,7 @@ function JobseekerInfo() {
             </div>
 
  
-            <div className="w-full lg:w-1/2  md:ml-5 mb-8 lg:mb-0 bg-white"> 
+            <div className="w-full lg:w-1/2  md:ml-5 mb-8 lg:mb-0 bg-white shadow-md rounded-md"> 
                 <div className="lg:ml-4">
                      <div className="mt-5 ml-6 mr-6 ">
                         {/* <!-- Small Section Tittle --> */}

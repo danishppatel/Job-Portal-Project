@@ -31,7 +31,7 @@ function Home() {
   
   let filteredJobs = []; //extract those which are not apllied by jobseeker
   let user = useSelector(state=>state.todos)
-  console.log("user :  ", user)
+
   let navigate = useNavigate();
   useEffect(()=>{
     if(user.userEmail ===''){

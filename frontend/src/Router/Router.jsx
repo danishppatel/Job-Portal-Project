@@ -10,7 +10,6 @@ import SignUp from "../Pages/SignUp";
 import UpdateJob from "../Pages/UpdateJob";
 import ResumeUploader from "../Pages/ResumeUploader";
 import Mode from "../Pages/Mode";
-import Dashboard from "../Pages/Dashboard";
 import Error from "../Pages/Error";
 import JobSeekerForm from "../Pages/JobSeekerForm";
 import JobseekerInfo from "../Pages/JobseekerInfo";
@@ -18,141 +17,368 @@ import AppliedJob from "../Pages/AppliedJob";
 import ModifyJobseekerForm from "../Pages/ModifyJobseekerForm";
 import HomeEmployer from "../Pages/HomeEmployer";
 import VerifyMessage from "../Pages/VerifyMessage";
+import { useSelector } from "react-redux";
 
-// function Layout(){
-//   const user = true;
-//   const location = useLocation();
+// Replace this with your actual authentication logic
+let mode = localStorage.getItem("userrole");
 
-//   return 
+console.log("first mode :  ", mode)
+let user;
+const isAuthenticated = () => {
+   user = useSelector(state=>state.todos)
+
+   if(user.userEmail === ''){
+    return false;
+   }
+ 
+   return true;
+
+};
+
+function PrivateRoute({ element, path,mode }) {
+  
+  return isAuthenticated(mode) ? (
+    element
+  ) : (
+    <Navigate to="/login" state={{ from: path }} replace />
+  );
+}
+
+
+const getJobSeekerRoutes = () => {
+  return (
+    [
+      {
+        path: "/",
+        element: <App/>,
+        children:[
+            { 
+              path:"/", 
+              element:<PrivateRoute element={<Home/>} path="/"/>,
+            },
+            {
+              path:"/applied-job",
+              element:<PrivateRoute element={<AppliedJob/>} path="/applied-job"/>
+            },
+            {
+              path:"/contact",  
+              element:<Contact/>
+            },
+            {
+              path:"/job/:id",  
+              element:<PrivateRoute element={<JobDetails/>} path="/job/:id"/>
+            },      
+          ]
+      },
+      {
+          path:"/login",  
+          element:<Login/>,      
+      },
+      {
+          path:"/sign-up",  
+          element:<SignUp/>
+      },
+      {
+        path:"send-mail",
+        element:<PrivateRoute element={<VerifyMessage/>} path="send-mail"/>
+      },
+      {
+          path:"/resumeUploader",
+          element:<PrivateRoute element={<ResumeUploader/>} path="resumeUploader"/>
+      },
+      {
+          path:"/mode/:email",
+          element:<PrivateRoute element={<Mode/>} path="/mode/:email"/>
+      },
+      {
+        path:"/jobseeker",
+        element:<PrivateRoute element={<JobSeekerForm/>} path="/jobseeker"/>
+      },
+      {
+        path:"/modify-Jobseekerdata/:id",
+        element:<PrivateRoute element={<ModifyJobseekerForm/>} path="/modify-Jobseekerdata/:id"/>
+      },    
+      {
+        path:"*",
+        element:<Error/>
+      },
+    ]
+  )
+
+}
+
+const getEmployerRoutes = () => {
+  return (
+    [
+      {
+        path: "/",
+        element: <App/>,
+        children:[
+            
+            {
+              path:"/home-employer",
+              element:<PrivateRoute element={<HomeEmployer/>} path="/home-employer" />
+            },
+            { 
+              path:"/post-job",  
+              element:<PrivateRoute element={<CreateJob/>} path="/post-job"/>
+            },
+            {
+              path:"/my-job",  
+              element:<PrivateRoute element={<MyJobs/>} path="/my-job"/>
+            },
+            {
+              path:"/contact",  
+              element:<Contact/>
+            },
+          ]
+      },
+      {
+          path:"/login",  
+          element:<Login/>,      
+      },
+      {
+          path:"/sign-up",  
+          element:<SignUp/>
+      },
+      {
+        path:"send-mail",
+        element:<PrivateRoute element={<VerifyMessage/>} path="send-mail"/>
+      },
+      {
+          path:"/mode/:email",
+          element:<PrivateRoute element={<Mode/>} path="/mode/:email"/>
+      },
+      {
+          path:"/jobseeker-info/:id",
+          element:<PrivateRoute element={<JobseekerInfo/>} path="/jobseeker-info/:id"/>
+      },
+      {
+        path:"/edit-jobs/:id",
+        element:<PrivateRoute element={<CreateJob/>} path="/edit-jobs/:id"/>
+      },
+      {
+        path:"*",
+        element:<Error/>
+      }    
+    ]
+  )
+
+}
+
+// const router= ()=>{
+//   let f =false;
+ 
+//   if(mode ===   'employer'){
+//     // employer
+//     return (
+//       createBrowserRouter([
+//         {
+//           path: "/",
+//           element: <App/>,
+//           children:[
+              
+//               {
+//                 path:"/home-employer",
+//                 element:<PrivateRoute element={<HomeEmployer/>} path="/home-employer" />
+//               },
+//               { 
+//                 path:"/post-job",  
+//                 element:<PrivateRoute element={<CreateJob/>} path="/post-job"/>
+//               },
+//               {
+//                 path:"/my-job",  
+//                 element:<PrivateRoute element={<MyJobs/>} path="/my-job"/>
+//               },
+//               {
+//                 path:"/contact",  
+//                 element:<Contact/>
+//               },
+//             ]
+//         },
+//         {
+//             path:"/login",  
+//             element:<Login/>,      
+//         },
+//         {
+//             path:"/sign-up",  
+//             element:<SignUp/>
+//         },
+//         {
+//           path:"send-mail",
+//           element:<PrivateRoute element={<VerifyMessage/>} path="send-mail"/>
+//         },
+//         {
+//             path:"/mode/:email",
+//             element:<PrivateRoute element={<Mode/>} path="/mode/:email"/>
+//         },
+//         {
+//             path:"/jobseeker-info/:id",
+//             element:<PrivateRoute element={<JobseekerInfo/>} path="/jobseeker-info/:id"/>
+//         },
+//         {
+//           path:"/edit-jobs/:id",
+//           element:<PrivateRoute element={<CreateJob/>} path="/edit-jobs/:id"/>
+//         },
+//         {
+//           path:"*",
+//           element:<Error/>
+//         }    
+//       ])
+//     )
+//   }else if(mode === 'jobseeker'){
+//     return (
+//       createBrowserRouter([
+//         {
+//           path: "/",
+//           element: <App/>,
+//           children:[
+//               { 
+//                 path:"/", 
+//                 element:<PrivateRoute element={<Home/>} path="/"/>,
+//               },
+//               {
+//                 path:"/applied-job",
+//                 element:<PrivateRoute element={<AppliedJob/>} path="/applied-job"/>
+//               },
+//               {
+//                 path:"/contact",  
+//                 element:<Contact/>
+//               },
+//               {
+//                 path:"/job/:id",  
+//                 element:<PrivateRoute element={<JobDetails/>} path="/job/:id"/>
+//               },      
+//             ]
+//         },
+//         {
+//             path:"/login",  
+//             element:<Login/>,      
+//         },
+//         {
+//             path:"/sign-up",  
+//             element:<SignUp/>
+//         },
+//         {
+//           path:"send-mail",
+//           element:<PrivateRoute element={<VerifyMessage/>} path="send-mail"/>
+//         },
+//         {
+//             path:"/resumeUploader",
+//             element:<PrivateRoute element={<ResumeUploader/>} path="resumeUploader"/>
+//         },
+//         {
+//             path:"/mode/:email",
+//             element:<PrivateRoute element={<Mode/>} path="/mode/:email"/>
+//         },
+//         {
+//           path:"/jobseeker",
+//           element:<PrivateRoute element={<JobSeekerForm/>} path="/jobseeker"/>
+//         },
+//         {
+//           path:"/modify-Jobseekerdata/:id",
+//           element:<PrivateRoute element={<ModifyJobseekerForm/>} path="/modify-Jobseekerdata/:id"/>
+//         },    
+//         {
+//           path:"*",
+//           element:<Error/>
+//         },
+//       ])
+//     )
+//   }
+ 
 // }
 
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App/>,
-    children:[
-      { path:"/", 
-          element:<Home/>,
-        },
-        {
-          path:"/home-employer",
-          element:<HomeEmployer/>
-        },
-        { 
-          path:"/post-job",  
-          element:<CreateJob/>
-        },
-        {
-          path:"/my-job",  
-          element:<MyJobs/>
-        },
-        {
-          path:"/applied-job",
-          element:<AppliedJob/>
-        },
-        {
-          path:"/contact/",  
-          element:<Contact/>
-        },
-        {
-          path:"/job/:id",  
-          element:<JobDetails/>
-        },
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <App/>,
+//     children:[
+//         { 
+//           path:"/", 
+//           element:<PrivateRoute element={<Home/>} path="/"/>,
+//         },
+//         {
+//           path:"/home-employer",
+//           element:<PrivateRoute element={<HomeEmployer/>} path="/home-employer" mode={"employer"}/>
+//         },
+//         { 
+//           path:"/post-job",  
+//           element:<PrivateRoute element={<CreateJob/>} path="/post-job" mode={"employer"}/>
+//         },
+//         {
+//           path:"/my-job",  
+//           element:<PrivateRoute element={<MyJobs/>} path="/my-job" mode={"employer"}/>
+//         },
+//         {
+//           path:"/applied-job",
+//           element:<PrivateRoute element={<AppliedJob/>} path="/applied-job"/>
+//         },
+//         {
+//           path:"/contact",  
+//           element:<Contact/>
+//         },
+//         {
+//           path:"/job/:id",  
+//           element:<PrivateRoute element={<JobDetails/>} path="/job/:id"/>
+//         },
         
-      ]
-  },
-  {
-      path:"/login",  
-      element:<Login/>,      
-  },
-  {
-      path:"/sign-up",  
-      element:<SignUp/>
-  },
-  {
-    path:"send-mail",
-    element:<VerifyMessage/>
-  },
-  {
-      path:"/resumeUploader",
-      element:<ResumeUploader/>
-  },
-  {
-      path:"/mode/:email",
-      element:<Mode/>
-  },
-  {
-      path:"/dashboard",
-      element:<Dashboard/>
-  },
-  {
-    path:"*",
-    element:<Error/>
-  },
-  {
-    path:"/jobseeker",
-    element:<JobSeekerForm/>
-  },
-  {
-    path:"/modify-Jobseekerdata/:id",
-    element:<ModifyJobseekerForm/>
-  },
-  {
-      path:"/jobseeker-info/:id",
-      element:<JobseekerInfo/>
-  },
-  {
-    path:"/edit-jobs/:id",
-    element:<CreateJob/>
-}
+//       ]
+//   },
+//   {
+//       path:"/login",  
+//       element:<Login/>,      
+//   },
+//   {
+//       path:"/sign-up",  
+//       element:<SignUp/>
+//   },
+//   {
+//     path:"send-mail",
+//     element:<PrivateRoute element={<VerifyMessage/>} path="send-mail"/>
+//   },
+//   {
+//       path:"/resumeUploader",
+//       element:<PrivateRoute element={<ResumeUploader/>} path="resumeUploader"/>
+//   },
+//   {
+//       path:"/mode/:email",
+//       element:<PrivateRoute element={<Mode/>} path="/mode/:email"/>
+//   },
+//   {
+//     path:"*",
+//     element:<Error/>
+//   },
+//   {
+//     path:"/jobseeker",
+//     element:<PrivateRoute element={<JobSeekerForm/>} path="/jobseeker"/>
+//   },
+//   {
+//     path:"/modify-Jobseekerdata/:id",
+//     element:<PrivateRoute element={<ModifyJobseekerForm/>} path="/modify-Jobseekerdata/:id"/>
+//   },
+//   {
+//       path:"/jobseeker-info/:id",
+//       element:<PrivateRoute element={<JobseekerInfo/>} path="/jobseeker-info/:id"/>
+//   },
+//   {
+//     path:"/edit-jobs/:id",
+//     element:<PrivateRoute element={<CreateJob/>} path="/edit-jobs/:id"/>
+// }
   
   
   
-]);
+// ]);
+
+const router = createBrowserRouter(mode === "jobseeker" 
+                                              ? getJobSeekerRoutes() 
+                                              :( mode==="employer" ? getEmployerRoutes() : [
+                                                                                              {
+                                                                                                path:"*",
+                                                                                                element:<Login/>
+                                                                                              },
+                                                                                            ] 
+ ));
 
 export default router;
-
-
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path='/' element={<Layout/>}>
-//        <Route path='' element={<Home/>} />
-//        <Route path='about' element={<About/>} /> 
-//        <Route path='contact' element={<Contact/>} />
-//        <Route path='user/:userid' element={<User/>} />
-//        <Route 
-//          loader={githubInfoLoader}
-//          path='github'
-//          element={<Github/>} 
-//        />
-//     </Route>
-//   )
-// )
-
-// export default router;
-
-
-// const router =createBrowserRouter([
-  // {
-//       path : '/',
-//       element:<Layout/>,
-//       children:[
-//           {
-//               path:"",
-//               element:<Home/>
-//           },
-//           {
-//               path:"about",
-//               element:<About/>
-//           },
-//           {
-//             path:"contact",
-//             element:<Contact/>
-//           }
-//       ]
-
-//   }
-// ])
-
-// Approach -2

@@ -17,5 +17,5 @@ export const store = configureStore({
   reducer: persistedReducer,
 });
 
-// Create a persistor object
+// // Create a persistor object
 export const persistor = persistStore(store);

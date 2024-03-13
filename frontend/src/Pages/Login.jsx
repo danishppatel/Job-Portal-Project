@@ -61,7 +61,7 @@ function Login() {
     })
   }
 
-  console.log("input value" , inputValue)
+  // console.log("input value" , inputValue)
 
   const loginUser = async (e)=>{
     e.preventDefault();
@@ -102,8 +102,22 @@ function Login() {
           toast.success(res.message);
          
           let userEmail = email;
+
           //set token in local storage
           localStorage.setItem('usertoken' ,res.token);
+
+          //session storage
+          const now = new Date();
+          const expirationTime = now.getTime() + 60 * 24 * 60 * 1000;
+      
+          // Create an object to store both the value and the expiration time
+          const itemWithExpiry = {
+              value: res.token,
+              expiry: expirationTime,
+          };
+      
+          // Convert the object to a JSON string before storing in sessionStorage
+          sessionStorage.setItem('usertoken', JSON.stringify(itemWithExpiry));
 
           setInputValue({
             ...inputValue,
@@ -113,6 +127,7 @@ function Login() {
            })
            
           dispatch(addTodo({userEmail:email}))  //dispatch
+          localStorage.setItem("userrole", inputValue.mode)
 
           setTimeout(() => {
           
@@ -187,7 +202,7 @@ function Login() {
               </div>
 
               <div className="flex flex-col ml-4 mr-4">
-                <h4 className=" text-start text-lg mb-2 mt-2">Select the mode that you want?</h4>
+                <h4 className=" text-start text-lg mb-2 mt-2">Select the Role</h4>
                 <div className='w-full'>
                   <select
                     className='border sm:w-full rounded py-2 px-4  mb-6'

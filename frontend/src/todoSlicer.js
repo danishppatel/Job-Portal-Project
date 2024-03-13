@@ -1,7 +1,7 @@
 import {createSlice, nanoid} from'@reduxjs/toolkit'
 
 let initialState = {
-    todos:{id:1,userEmail:'',mode:''}
+    todos:{id:1,userEmail:''}
 }
 let todoSlicer = createSlice({
     name:'todo',
@@ -11,13 +11,12 @@ let todoSlicer = createSlice({
             let todo = {
                 id : nanoid(),
                 userEmail:action.payload.userEmail
+               
             }
            state.todos = todo;
         },
         removeTodo:(state,action)=>{
-            state.todos = state.todos.filter((x)=>{
-              return ( x.id !== action.payload);
-            })
+            state.todos.userEmail=''
         }
     }
 });
