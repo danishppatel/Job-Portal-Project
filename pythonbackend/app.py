@@ -10,8 +10,12 @@ import os
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
 import logging
+from dotenv import load_dotenv
+
 app = Flask(__name__)
 
+load_dotenv()
+secret_key = os.getenv("SECRET_KEY")
 @app.route('/api/data', methods=['GET'])
 def get_data():
     data = {'message': 'Hello from the API'}
@@ -20,9 +24,9 @@ def get_data():
 @app.route('/api/data/pdf',methods=['POST'])
 def get_pdf():
     
-    os.environ["OPENAI_API_KEY"] ="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"
-    # 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"
-    # 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  -- tamaku
+    os.environ["OPENAI_API_KEY"] =secret_key
+   
+   
     if 'file' not in request.files:
         return jsonify({'error':'invalid data'})
     
