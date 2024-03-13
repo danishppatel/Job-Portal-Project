@@ -28,7 +28,7 @@ function Login() {
 
       //  console.log(user.email,"user1-------user1");
       // localStorage.setItem('usertoken' ,res.token);
-      dispatch(addTodo({userEmail:user.email}))
+      dispatch(addTodo({userEmail:user.email,mode:user.mode}))
 
        navigate(`/mode/${user.email}`);
     
@@ -126,8 +126,8 @@ function Login() {
             mode:"jobseeker"
            })
            
-          dispatch(addTodo({userEmail:email}))  //dispatch
-          localStorage.setItem("userrole", inputValue.mode)
+          dispatch(addTodo({userEmail:email,mode:inputValue.mode}))  //dispatch
+          // localStorage.setItem("userrole", inputValue.mode)
 
           setTimeout(() => {
           
