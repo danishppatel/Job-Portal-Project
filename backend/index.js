@@ -13,15 +13,11 @@ const bodyParser = require('body-parser');
 const cookieParser =  require('cookie-parser')
 const  nodemailer =  require('nodemailer');
 const jwt = require('jsonwebtoken');
-const passport  =require('passport');
 const { senderTokenFun } = require('./emailVerifier/senderToken.js');
-const OAuth2Strategy = require('passport-google-oauth2').Strategy;
 
 
 const port = process.env.PORT | 3000;
 
-const clientId  ="904033972924-8ejo8mlp2a42lr04rhi29nl1lsm9mbjj.apps.googleusercontent.com";
-const clientSecret = "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"
 
 //middlewars
 app.use(cors({
@@ -37,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //backend code for resume parsing
-const apiUrl = 'http://127.0.0.1:5000/api/data/pdf';
+
 
 let b = {
   email: "",
@@ -75,8 +71,8 @@ async function fetchData(fileData) {
       });
 
       formData.append('data', a[i]);
-
-      const apiResponse = await axios.post(apiUrl, formData, {
+     
+      const apiResponse = await axios.post(process.env.API_URL, formData, {
         headers: {
           ...formData.getHeaders(),
         },
@@ -101,63 +97,6 @@ async function fetchData(fileData) {
 
 // -----------------------------------------------------------------------------------------------------
 
-
-//setup session
-// app.use(session({
-//   secret : "u23hdns71hgdp2003rths39e",
-//   resave: false,
-//   saveUninitialized :true
-// }))
-
-// // setup passport
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// passport.use(
-//     new OAuth2Strategy({
-//       clientID :clientId,
-//       clientSecret :clientSecret,
-//       callbackURL :"/auth/google/callback",
-//       scope:["profile","email"]
-//     }, 
-//     //  async function
-//     async(accessToken , refreshToken , profile , done)=>{
-//       console.log(profile);
-//         try {
-//           let user = await userdb.findOne({googleId :profile.id}).exec();
-
-//              if(!user){
-//                 user  =  new userdb({
-//                   googleId :profile.id,
-//                   displayName : profile.displayName,
-//                   email : profile.emails[0].value,
-//                   image : profile.photos[0].value
-//                 })
-
-//                 await user.save();
-//              }
-
-//         }catch (err) {
-//             return done(err,null);
-//         }
-//     })
-// )
-
-// passport.serializeUser((user, done) => {
-//   done(null,user);
-// });
-
-// passport.deserializeUser((user, done) => {
-//   done(null,user);
-// });
-
-// //initial google auth login
-// app.get('/auth/google', passport.authenticate("google", {scope:["profile","email"]}))
-
-// app.get('/auth/google/callback', passport.authenticate("google", {
-//   successRedirect:"http://localhost:5173",
-//   failureRedirect:"http://localhost:5173/login"
-// }))
 
 
 
@@ -205,7 +144,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
       return res.status(400).json({ error: 'Invalid request body' });
     }
     body.createAt = new Date();
-    console.log(body);
+    // console.log(body);
 
     try {
       const result = await jobCollection.insertOne(body);
@@ -334,7 +273,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
               let token = "token"
               await senderTokenFun(email, token);
  
-              console.log("\n\n after sending email...")
+              // console.log("\n\n after sending email...")
  
             
              res.status(201).json({message: "Registration successful!", status: "success" ,token : token});
@@ -464,7 +403,14 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
   
   
 
-
+app.get('/user/:email',async(req,res)=>{
+  let {email} = req.params;
+  // console.log(email);
+  let user =  await users.findOne({email:email});
+ 
+  
+  res.send(user);
+})
   //resume parsing code
   app.get("/data",(req, res) => {
      res.send(b);
@@ -523,7 +469,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
       let email = req.params.email;
       const jobseeker = await application.find({companyMail:email}).toArray();
       let jobSeekerlist = [];
-    console.log(jobseeker);
+    // console.log(jobseeker);
       for (const element of jobseeker) {
         let j = await jobSeeker.find({ email: element.email });
         j = await j.toArray();
@@ -587,7 +533,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
       return res.status(400).json({ error: 'Invalid request body' });
     }
     // body.createAt = new Date();
-    console.log("got at post-application",body);
+    // console.log("got at post-application",body);
 
     try {
 
@@ -613,7 +559,7 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
       return res.status(400).json({ error: 'Invalid request body' });
     }
 
-    console.log("got at applied job",body);
+    // console.log("got at applied job",body);
 
     try {
 
@@ -629,11 +575,11 @@ function startServer(jobCollection ,users, jobSeeker, application, appliedJobs) 
 })
 app.get("/applied-jobs/getOne/:id",async(req,res)=>{
   let {id} = req.params;
-  console.log('apply')
+  // console.log('apply')
   try {
     let job  = await appliedJobs.findOne({id:id})
   
-   console.log("applied job",job);
+  //  console.log("applied job",job);
    res.send(job);
     
   } catch (error) {
