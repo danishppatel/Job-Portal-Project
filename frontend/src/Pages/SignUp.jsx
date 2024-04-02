@@ -4,6 +4,7 @@ import {Link, NavLink, useNavigate} from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addTodo } from "../todoSlicer";
+
 function SignUp() {
 
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ function SignUp() {
     confirmPassword :"",
     mode:"jobseeker"
   });
+
+  // console.log("abc")
 
   // console.log(inputValue);
 
@@ -74,7 +77,7 @@ function SignUp() {
         const responseStatus =  await res.status;
 
         if(responseStatus === "success" ){
-          dispatch(addTodo({userEmail:email}));
+          dispatch(addTodo({userEmail:email,mode:mode}));
 
            setInputValue({
             ...inputValue,
