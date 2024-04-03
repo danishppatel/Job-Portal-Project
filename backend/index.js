@@ -52,7 +52,7 @@ let a = [
   "Student's achievements: give direct ans which given in pdf",
   "student's projects: give direct ans which given in pdf",
   "student's skills: give direct ans which given in pdf",
-  "student's experience: give direct ans which given in pdf"
+  "student's experience or work experience : give direct ans which given in pdf"
 ];
 
 let c = ["email", "name", "education", "achievement", "project", "skill","experience"];
@@ -71,8 +71,9 @@ async function fetchData(fileData) {
       });
 
       formData.append('data', a[i]);
+      // console.log(process.env.API_URL,"\napi\n\n");
      
-      const apiResponse = await axios.post(process.env.API_URL, formData, {
+      const apiResponse = await axios.post("http://127.0.0.1:5000/api/data/pdf", formData, {
         headers: {
           ...formData.getHeaders(),
         },
@@ -502,7 +503,17 @@ app.get('/user/:email',async(req,res)=>{
       res.send(jobs);
   })
   app.get("/jobseeker/id/:id",async(req,res)=>{
+   
     let jobs = await jobSeeker.find({id:req.params.id});
+        jobs = await jobs.toArray()
+        // console.log("JOBS---------",jobs);
+      res.send(jobs);
+  })
+
+  app.get("/jobseeker/_id/:id",async(req,res)=>{
+    console.log("hi modify resume page ", req.params.id);
+
+    let jobs = await jobSeeker.find({_id:new ObjectId(req.params.id)});
         jobs = await jobs.toArray()
         // console.log("JOBS---------",jobs);
       res.send(jobs);
@@ -515,13 +526,17 @@ app.get('/user/:email',async(req,res)=>{
   
    res.send("updated");
   })
+
+
   app.put("/jobSeekerupdate/id/:id",async(req,res)=>{
     let {id} = req.params;
     const body = req.body;
+
+    console.log("hi modify resume page ", id, body);
   
-   let a =  await jobSeeker.updateOne({_id:new ObjectId(id)},{$set:body});
-   
-   res.send("updated");
+    let a =  await jobSeeker.updateOne({_id:new ObjectId(id)},{$set:body});
+    console.log("da")
+    res.send("updated");
   })
   //----------------------------------------Application-----------------------------------------
 
