@@ -46,6 +46,7 @@ const Router = () => {
   const JobSeekerRoutes = () => (
     <Routes>
       <Route path="/" element={<App />}>
+        {/* <Route index element={<PrivateRoute element={<ResumeUploader />} path="/resumeUploader" />} /> */}
         <Route path="/" element={<PrivateRoute element={<Home />} path="/" />} />
         <Route path="/applied-job" element={<PrivateRoute element={<AppliedJob />} path="/applied-job" />} />
         <Route path="/modify-Jobseekerdata/:id" element={<PrivateRoute element={<ModifyJobseekerForm />}  path="/modify-Jobseekerdata/:id" />} />

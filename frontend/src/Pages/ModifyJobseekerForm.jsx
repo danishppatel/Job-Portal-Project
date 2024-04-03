@@ -24,18 +24,20 @@ function ModifyJobseekerForm() {
         let {id}= useParams();
         let todos = useSelector(state =>state.todos)
         const  [Id,setId] = useState('') ;
+
+        console.log("object id at modify", id)
     useEffect(() => {
     const fetchDataFromApi = async () => {
         try {
-        const response = await fetch(`http://localhost:3000/jobSeeker/${todos.userEmail}`);
+        const response = await fetch(`http://localhost:3000/jobseeker/_id/${id}`);
         let data = await response.json();
             
-       
+       console.log("here is my data",data);
         data = data[data.length-1];      
-        setId(data._id); 
+        setId(id); 
        
         console.log(data);     
-        setSelectedOption(data.skills)                                    
+        // setSelectedOption(data.skills)                                    
         setName(data.name);
         setEmail(data.email);
         setMobileNumber(data.mobileNumber);
@@ -116,18 +118,19 @@ function ModifyJobseekerForm() {
 
         const requiredFields = ["name", "email", "mobileNumber", "jobPost", "profileImage", "employmentType", "experience", "education", "achievement",  "project"];
 
-        if (!data.skills || data.skills.length === 0) {
-            console.log(data.skills,"data skills")
-            toast.error('Please select at least one skill.');
-            return;
-          }
+        // if (!data.skills || data.skills.length === 0) {
+        //     console.log(data.skills,"data skills")
+        //     toast.error('Please select at least one skill.');
+        //     return;
+        //   }
 
-        for (const field of requiredFields) {
-            if (!data[field] || data[field].trim() === "") {
-                toast.error(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
-                return;
-            }
-        }
+        // for (const field of requiredFields) {
+        //     if (!data[field] || data[field].trim() === "") {
+        //         toast.error(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+        //         return;
+        //     }
+        // }
+        console.log("modify")
     
          // Send the modified data to the server
         fetch(`http://localhost:3000/jobSeekerupdate/id/${Id}`, {
@@ -138,7 +141,7 @@ function ModifyJobseekerForm() {
         },
         body: JSON.stringify(data),
         }).then(res=>{
-           
+           console.log("yes this is work")
             navigate('/')
         }
 
